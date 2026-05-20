@@ -8,7 +8,7 @@ function generateSecret() {
 }
 
 async function generateQRCode(secret, accountLabel) {
-  const otpauth = authenticator.keyuri(accountLabel, 'PaymentsSystem', secret);
+  const otpauth = authenticator.keyuri(accountLabel, 'SAIINT BANK INC', secret);
   return QRCode.toDataURL(otpauth);
 }
 

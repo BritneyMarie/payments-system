@@ -18,8 +18,9 @@ export default function EmployeeLogin() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-2 text-center">Employee Portal</h1>
-        <p className="text-center text-gray-500 text-sm mb-6">Internal access only</p>
+        <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase mb-1 text-center">SAIINT BANK INC</p>
+        <h1 className="text-2xl font-bold mb-2 text-center">Staff Portal</h1>
+        <p className="text-center text-gray-500 text-sm mb-6">Authorised personnel only</p>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Username</label>

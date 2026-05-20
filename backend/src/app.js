@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth.routes');
 const transactionRoutes = require('./routes/transaction.routes');
 const employeeRoutes = require('./routes/employee.routes');
+const exchangeRoutes = require('./routes/exchange.routes');
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/portal', employeeRoutes);
+app.use('/api/exchange-rates', exchangeRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

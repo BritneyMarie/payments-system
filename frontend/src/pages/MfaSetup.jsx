@@ -15,6 +15,7 @@ export default function MfaSetup() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white p-8 rounded-lg shadow w-full max-w-md text-center">
+        <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase mb-1">SAIINT BANK INC</p>
         <h1 className="text-2xl font-bold mb-4">Set Up Two-Factor Authentication</h1>
         <p className="text-gray-600 mb-6">
           Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.), then verify below.

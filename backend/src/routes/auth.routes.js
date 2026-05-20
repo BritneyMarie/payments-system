@@ -152,11 +152,40 @@ router.post('/logout', (req, res) => {
 
 router.get('/me', requireAuth('customer'), async (req, res) => {
   const result = await pool.query(
-    'SELECT id, full_name, mfa_enabled FROM customers WHERE id = $1',
+    'SELECT id, full_name, mfa_enabled, account_number_enc, created_at, balance, account_status FROM customers WHERE id = $1',
     [req.user.sub]
   );
   if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
-  res.json(result.rows[0]);
+  const row = result.rows[0];
+  res.json({
+    id: row.id,
+    full_name: row.full_name,
+    mfa_enabled: row.mfa_enabled,
+    account_number: decrypt(row.account_number_enc),
+    member_since: row.created_at,
+    balance: row.balance,
+    account_status: row.account_status,
+  });
+});
+
+router.post('/change-password', requireAuth('customer'), async (req, res) => {
+  const { current_password, new_password } = req.body;
+  if (!current_password || !new_password)
+    return res.status(400).json({ error: 'Both current_password and new_password are required' });
+
+  const passOk = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,}$/.test(new_password);
+  if (!passOk)
+    return res.status(422).json({ error: 'New password must be at least 12 characters with upper, lower, digit, and special character' });
+
+  const result = await pool.query('SELECT password_hash FROM customers WHERE id = $1', [req.user.sub]);
+  if (!result.rows.length) return res.status(404).json({ error: 'User not found' });
+
+  const valid = await comparePassword(current_password, result.rows[0].password_hash);
+  if (!valid) return res.status(401).json({ error: 'Current password is incorrect' });
+
+  const newHash = await hashPassword(new_password);
+  await pool.query('UPDATE customers SET password_hash = $1 WHERE id = $2', [newHash, req.user.sub]);
+  res.json({ message: 'Password updated successfully' });
 });
 
 const employeeLoginRules = [
@@ -178,7 +207,7 @@ router.post('/employee/login', employeeLoginRules, handleValidation, async (req,
   const valid = await comparePassword(password, employee.password_hash);
   if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
-  const token = signToken({ sub: employee.id, role: 'employee' });
+  const token = signToken({ sub: employee.id, role: 'employee', username: employee.username });
   res.cookie('token', token, COOKIE_OPTS);
   res.json({ id: employee.id, username: employee.username });
 });

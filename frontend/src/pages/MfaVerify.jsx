@@ -18,6 +18,7 @@ export default function MfaVerify() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white p-8 rounded-lg shadow w-full max-w-sm text-center">
+        <p className="text-xs font-semibold tracking-widest text-gray-400 uppercase mb-1">SAIINT BANK INC</p>
         <h1 className="text-2xl font-bold mb-4">Two-Factor Verification</h1>
         <p className="text-gray-600 mb-6">Enter the 6-digit code from your authenticator app.</p>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
